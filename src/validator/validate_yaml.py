@@ -1,5 +1,7 @@
 """Validation of the experiment configuration YAML file."""
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path
@@ -150,16 +152,17 @@ def _is_json_file(corpus) -> bool:
 
     return data
 
-def _convert_and_validate_jsonl_structure(data,corpus) -> None:
+def _convert_and_validate_jsonl_structure(data,corpus) -> Path | None:
     text = corpus.read_text(encoding="utf-8")
     if data is not None:
         if isinstance(data, list):
             jsonl_path = _json_to_jsonl(corpus)
             logger.info("Corpus JSON converted to JSONL: %s", jsonl_path)
-            return
+            return jsonl_path
         if len([line for line in text.splitlines() if line.strip()]) == 1:
-            return
+            return None
         raise ValueError(f"Corpus JSON is not an array: {corpus}")
+    return None
     
 def _validate_dataset_lines(corpus) -> None:
     text = corpus.read_text(encoding="utf-8")
@@ -189,7 +192,9 @@ def validate_yaml_file(yaml_path: str) -> None:
 
     data = _is_json_file(corpus)
     if data is not None:
-        _convert_and_validate_jsonl_structure(data,corpus)
+        converted = _convert_and_validate_jsonl_structure(data,corpus)
+        if converted is not None:
+            corpus = converted
 
     _validate_dataset_lines(corpus)
 
