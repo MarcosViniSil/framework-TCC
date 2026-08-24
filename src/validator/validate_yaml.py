@@ -143,14 +143,18 @@ def _validate_dataset(raw) -> Path:
 
     return ds_path
 
-def _is_json_file(corpus) -> bool:
+def _validate_json_file(corpus) -> bool:
     text = corpus.read_text(encoding="utf-8")
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
         data = None
 
-    return data
+    if data is not None:
+        converted = _convert_and_validate_jsonl_structure(data,corpus)
+        if converted is not None:
+            corpus = converted
+
 
 def _convert_and_validate_jsonl_structure(data,corpus) -> Path | None:
     text = corpus.read_text(encoding="utf-8")
@@ -190,16 +194,8 @@ def validate_yaml_file(yaml_path: str) -> None:
 
     corpus = _validate_dataset_existence(ds_path,path)
 
-    data = _is_json_file(corpus)
-    if data is not None:
-        converted = _convert_and_validate_jsonl_structure(data,corpus)
-        if converted is not None:
-            corpus = converted
+    _validate_json_file(corpus)
 
     _validate_dataset_lines(corpus)
 
     _validate_hf_models(raw)
-
-
-if __name__ == "__main__":
-    validate_yaml_file("../../model.yaml")
