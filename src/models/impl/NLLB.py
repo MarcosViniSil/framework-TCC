@@ -52,10 +52,19 @@ class NLLBModel(BaseTranslationModel):
             max_length=self.max_length
         ).to(self.device)
         
+        target_token_id = self.tokenizer.convert_tokens_to_ids(target_code)
+        
+        if target_token_id is None or target_token_id == self.tokenizer.unk_token_id:
+            vocab = self.tokenizer.get_vocab()
+            if target_code in vocab:
+                target_token_id = vocab[target_code]
+            else:
+                target_token_id = self.tokenizer.bos_token_id
+        
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
-                forced_bos_token_id=self.tokenizer.lang_code_to_id[target_code],
+                forced_bos_token_id=target_token_id,
                 **self.generation_params,
                 max_length=self.max_length
             )

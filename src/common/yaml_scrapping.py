@@ -7,5 +7,4 @@ class YamlService:
     def getYamlData() -> list[dict]:
         with open(YAML_PATH, 'r', encoding='utf-8') as file:
             data = yaml.safe_load(file)
-            print(data)
             return data

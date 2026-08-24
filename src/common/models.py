@@ -2,10 +2,15 @@ from common.yaml_scrapping import YamlService
 
 class Models:
     @staticmethod
-    def get_models() -> list[dict]:
+    def get_models_ids() -> list[dict]:
         data = YamlService.getYamlData()
         models_list = data['models']
         return list(map(lambda x : x['name'], models_list))
+
+    @staticmethod
+    def get_models() -> list[dict]:
+        data = YamlService.getYamlData()
+        return data['models']
 
     @staticmethod
     def get_model_details(modelId:str) -> dict:
