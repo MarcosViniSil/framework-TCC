@@ -11,7 +11,7 @@ from domain.dataset import DataSet
 
 logger = logging.getLogger(__name__)
 
-def get_project_root():
+def _get_project_root():
     current_file = Path(__file__).resolve()
     project_root = current_file.parent.parent.parent  
     return project_root
@@ -24,7 +24,7 @@ def _get_corpus_path(yaml_path) -> str:
 
 def convert_corpus_to_dict(yaml_path) -> DataSet:
     corpus_path = _get_corpus_path(yaml_path)
-    project_root = get_project_root()
+    project_root = _get_project_root()
     absolute_path = project_root / corpus_path.lstrip('. /')
 
     with open(absolute_path, 'r', encoding='utf-8') as json_data:
@@ -33,7 +33,6 @@ def convert_corpus_to_dict(yaml_path) -> DataSet:
                 corpus = json.load(json_data)
             else:
                 corpus = [json.loads(line) for line in json_data if line.strip()] 
-            print(corpus)
             return DataSet(corpus if corpus else [{}])
 
         except Exception as e:

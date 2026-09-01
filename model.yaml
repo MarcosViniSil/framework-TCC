@@ -80,7 +80,7 @@ quality_metrics:
 performance_metrics:
   - name: "inference_time"
     enabled: true
-    warmup_batches: 3  
+    import: 3  
     measure_per_batch: true  
     
   - name: "memory_usage"
@@ -95,11 +95,6 @@ performance_metrics:
     method: "psutil"
     per_core: false  
     
-  - name: "gpu_utilization"
-    enabled: true
-    method: "pynvml" 
-    track_memory: true
-    track_utilization: true
 
 # ===== REPETIÇÕES =====
 executions:
@@ -110,30 +105,3 @@ executions:
   performance_strategy: "batch_sampling"  
   
   seeds: [42, 123, 456]  
-
-# ===== RELATÓRIOS =====
-reporting:
-  plots:
-    - type: "bar_chart"
-      metrics: ["bleu", "chrf", "bertscore"]
-      error_bars: true
-      title: "Comparação de Qualidade entre Modelos"
-      
-    - type: "scatter"
-      x_metric: "inference_time"
-      y_metric: "bleu"
-      title: "Trade-off: Tempo vs Qualidade"
-      size_by: "memory_usage"
-      
-    - type: "boxplot"
-      metrics: ["inference_time"]
-      title: "Distribuição do Tempo de Inferência"
-      
-    - type: "radar" 
-      metrics: ["bleu", "chrf", "bertscore", "memory_usage"]
-      normalize: true
-      title: "Perfil Comparativo dos Modelos"
-      
-  output_formats: ["pdf", "png", "html"]
-  include_raw_data: true
-  include_config: true
