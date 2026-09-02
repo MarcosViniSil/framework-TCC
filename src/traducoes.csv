@@ -1,0 +1,9 @@
+timestamp,id,original,translation,model_name
+2026-09-01 23:13:30.193743,1,Accerciser,Accerciser → Acercício,facebook/m2m100_418M
+2026-09-01 23:13:33.578667,2,Give your application an accessibility workout,Give your application an accessibility workout → Dê a sua aplicação um treino de acessibilidade,facebook/m2m100_418M
+2026-09-01 23:13:37.474570,3,Accerciser Accessibility Explorer,Accerciser Accessibility Explorer → Introdução ao Accessibility Explorer,facebook/m2m100_418M
+2026-09-01 23:13:43.157640,4,The default plugin layout for the bottom panel,The default plugin layout for the bottom panel → O layout do plugin padrão para o painel inferior,facebook/m2m100_418M
+2026-09-01 23:13:48.175222,5,The default plugin layout for the top panel,The default plugin layout for the top panel → O layout do plugin padrão para o painel superior,facebook/m2m100_418M
+2026-09-01 23:13:53.383177,6,A list of plugins that are disabled by default,A list of plugins that are disabled by default → Uma lista de plugins que são desativados por padrão,facebook/m2m100_418M
+2026-09-01 23:13:59.967393,7,Highlight duration,Highlight duration → Destaque a duração,facebook/m2m100_418M
+2026-09-01 23:14:05.842116,8,The duration of the highlight box when selecting accessible nodes,The duration of the highlight box when selecting accessible nodes → A duração da caixa de alerta ao selecionar nódulos acessíveis,facebook/m2m100_418M

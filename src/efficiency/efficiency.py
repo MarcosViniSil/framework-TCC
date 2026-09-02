@@ -1,9 +1,10 @@
-from pathlib import Path
 import os
 import psutil
 import yaml
 import time
 import threading
+import tracemalloc
+
 
 YAML_PATH = "../model.yaml"
 
@@ -15,6 +16,9 @@ class Efficiency:
         self.end_inference = None
         self.stop_event = None
         self.collector = None
+        self.process = None
+        self.mem_before = None
+        self.mem_after = None
         
 
     def _get_libraries(self,yaml_path) -> str:
@@ -48,6 +52,14 @@ class Efficiency:
 
         self.collector.start()
 
+    def _start_memory_collection(self) -> None:
+        tracemalloc.start()
+        self.mem_before = tracemalloc.take_snapshot()
+
+    def _stop_memory_collection(self) -> None:
+        self.mem_after = tracemalloc.take_snapshot()
+        tracemalloc.stop()
+
     def _start_inference_collection(self) -> None:
         self.start_inference = time.perf_counter()
 
@@ -57,6 +69,13 @@ class Efficiency:
     def _stop_cpu_collection(self) -> None:
         self.stop_event.set()
         self.collector.join()
+
+    def _memory_statistics(self) -> None:
+        stats = self.mem_before.compare_to(self.mem_after, 'lineno')
+        total_diff = sum(stat.size_diff for stat in stats)
+        total_diff_mb = total_diff / (1024 * 1024)
+    
+        print(f"Memória adicional consumida: {total_diff_mb:.2f} MB")
 
     def _inference_statistic(self) -> None:
         print(f"Tempo de inferencia , {(self.end_inference - self.start_inference) * 1000:.2f} ms" )
@@ -83,6 +102,9 @@ class Efficiency:
             if lib['name'] == "inference_time":
                 self._start_inference_collection()
                 self.libraries.append("INFERENCE_TIME")
+            if lib['name'] == "memory_usage":
+                self._start_memory_collection()
+                self.libraries.append("MEMORY_USAGE")
 
     def stop_collection(self) -> None:
         for lib in self.libraries:
@@ -90,10 +112,14 @@ class Efficiency:
                 self._stop_cpu_collection()
             if lib == "INFERENCE_TIME":
                 self._stop_inference_collection()
+            if lib == "MEMORY_USAGE":
+                self._stop_memory_collection()
+
 
     def collect_metrics(self) -> None:
         self._cpu_statistics()
         self._inference_statistic()
+        self._memory_statistics()
 
     def clear(self) -> None:
         self.samples = []
@@ -102,3 +128,6 @@ class Efficiency:
         self.end_inference = None
         self.stop_event = None
         self.collector = None
+        self.process = None
+        self.mem_before = None
+        self.mem_after = None
