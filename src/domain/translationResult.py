@@ -10,4 +10,4 @@ class TranslationResult:
     model_id: str = ""
     
     def __str__(self):
-        return f"{self.source_text} → {self.target_text}"
+        return {self.target_text}
