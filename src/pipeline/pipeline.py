@@ -28,7 +28,7 @@ def define_header() -> list[str]:
         "model_name",
         "BLEU",
         "BERTscore",
-        "chrf"
+        "chrf",
         # CPU
         "cpu_average_usage",
         "cpu_samples",
