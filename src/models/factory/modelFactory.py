@@ -7,13 +7,13 @@ from models.impl.M2M100 import M2M100Model
 
 
 class ModelFactory:
-        
+
     MODEL_CLASSES = {
-        'Helsinki-NLP/opus-mt-tc-big-en-pt': OpusMTModel,
-        'facebook/nllb-200-distilled-600M': NLLBModel,
-        'facebook/m2m100_418M': M2M100Model
+        "Helsinki-NLP/opus-mt-tc-big-en-pt": OpusMTModel,
+        "facebook/nllb-200-distilled-600M": NLLBModel,
+        "facebook/m2m100_418M": M2M100Model,
     }
-    
+
     @staticmethod
     def create_model(modelId: str) -> BaseTranslationModel:
         model_class = ModelFactory.MODEL_CLASSES.get(modelId)

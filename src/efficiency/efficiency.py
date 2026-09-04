@@ -34,10 +34,10 @@ class Efficiency:
         self.mem_peak = None
 
     def _get_libraries(self, yaml_path) -> list:
-        with open(yaml_path, 'r', encoding='utf-8') as file:
+        with open(yaml_path, "r", encoding="utf-8") as file:
             data = yaml.safe_load(file)
 
-        return data['performance_metrics']
+        return data["performance_metrics"]
 
     def _collect_cpu_data(self, process, stop_event):
 
@@ -56,8 +56,7 @@ class Efficiency:
         self.stop_event = threading.Event()
 
         self.collector = threading.Thread(
-            target=self._collect_cpu_data,
-            args=(self.process, self.stop_event)
+            target=self._collect_cpu_data, args=(self.process, self.stop_event)
         )
 
         self.collector.start()
@@ -90,8 +89,7 @@ class Efficiency:
         self.memory_stop_event = threading.Event()
 
         self.memory_collector = threading.Thread(
-            target=self._collect_memory_data,
-            args=(self.memory_stop_event,)
+            target=self._collect_memory_data, args=(self.memory_stop_event,)
         )
 
         self.memory_collector.start()
@@ -106,7 +104,6 @@ class Efficiency:
         if self.memory_samples:
             self.mem_peak = max(self.memory_samples)
 
-
     def _start_inference_collection(self):
 
         self.start_inference = time.perf_counter()
@@ -115,44 +112,50 @@ class Efficiency:
 
         self.end_inference = time.perf_counter()
 
-
     def _memory_statistics(self) -> MemoryEfficiency:
 
         additional_memory = self.mem_peak - self.mem_before
 
-        initial_memory = round(self.mem_before,2)
+        initial_memory = round(self.mem_before, 2)
 
-        final_memory = round(self.mem_after,2)
+        final_memory = round(self.mem_after, 2)
 
-        memory_peak = round(self.mem_peak,2)
+        memory_peak = round(self.mem_peak, 2)
 
-        return MemoryEfficiency(additional_memory=additional_memory, initial_memory=initial_memory,final_memory=final_memory,memory_peak=memory_peak,)
+        return MemoryEfficiency(
+            additional_memory=additional_memory,
+            initial_memory=initial_memory,
+            final_memory=final_memory,
+            memory_peak=memory_peak,
+        )
 
     def _inference_statistic(self) -> Inference:
 
-        elapsed = (
-            self.end_inference -
-            self.start_inference
-        ) * 1000
+        elapsed = (self.end_inference - self.start_inference) * 1000
 
-        return Inference(inferenceTime=round(elapsed,2))
+        return Inference(inferenceTime=round(elapsed, 2))
 
     def _cpu_statistics(self) -> CpuEfficiency:
 
         if not self.samples:
-            return CpuEfficiency(samples=0,average_usage=0, max_usage=0, min_usage=0)
+            return CpuEfficiency(samples=0, average_usage=0, max_usage=0, min_usage=0)
 
-        average_usage = round(sum(self.samples) / len(self.samples),2)
+        average_usage = round(sum(self.samples) / len(self.samples), 2)
 
         sample_number = len(self.samples)
 
-        max_usage = round(max(self.samples),2)
-        
-        min_usage = round(min(self.samples),2)
+        max_usage = round(max(self.samples), 2)
 
-        max_usage = round(max(self.samples),2)
+        min_usage = round(min(self.samples), 2)
 
-        return CpuEfficiency(average_usage=average_usage, samples=sample_number, max_usage=max_usage, min_usage=min_usage)
+        max_usage = round(max(self.samples), 2)
+
+        return CpuEfficiency(
+            average_usage=average_usage,
+            samples=sample_number,
+            max_usage=max_usage,
+            min_usage=min_usage,
+        )
 
     def start_collection(self):
 
@@ -160,15 +163,15 @@ class Efficiency:
 
         for lib in libraries:
 
-            if lib['name'] == "cpu_usage":
+            if lib["name"] == "cpu_usage":
                 self._start_cpu_collection()
                 self.libraries.append("CPU")
 
-            elif lib['name'] == "inference_time":
+            elif lib["name"] == "inference_time":
                 self._start_inference_collection()
                 self.libraries.append("INFERENCE_TIME")
 
-            elif lib['name'] == "memory_usage":
+            elif lib["name"] == "memory_usage":
                 self._start_memory_collection()
                 self.libraries.append("MEMORY_USAGE")
 
@@ -187,11 +190,13 @@ class Efficiency:
 
     def collect_metrics(self):
 
-        cpu:CpuEfficiency = self._cpu_statistics()
-        inference:Inference = self._inference_statistic()
-        memory:MemoryEfficiency = self._memory_statistics()
+        cpu: CpuEfficiency = self._cpu_statistics()
+        inference: Inference = self._inference_statistic()
+        memory: MemoryEfficiency = self._memory_statistics()
 
-        return EfficiencyModel(cpy_efficiency=cpu, memory_efficiency=memory, inference=inference)
+        return EfficiencyModel(
+            cpy_efficiency=cpu, memory_efficiency=memory, inference=inference
+        )
 
     def clear(self):
 

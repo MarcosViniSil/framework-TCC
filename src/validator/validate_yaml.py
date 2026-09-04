@@ -41,7 +41,7 @@ def _hf_model_exists_api(model_id: str) -> bool:
             exc.code,
         )
         return True
-    except Exception as exc: 
+    except Exception as exc:
         logger.warning(
             "Could not verify model '%s' on HuggingFace (%s); skipping.",
             model_id,
@@ -92,17 +92,25 @@ def _json_to_jsonl(corpus: Path) -> Path:
             jsonl_file.write(json.dumps(register, ensure_ascii=False) + "\n")
     return jsonl_path
 
+
 def _validate_models(raw) -> None:
     models = raw.get("models") or []
     if not isinstance(models, list) or not models:
-        raise ValueError("There is no model defined. Please, specify which models you'd like to use.")
+        raise ValueError(
+            "There is no model defined. Please, specify which models you'd like to use."
+        )
+
 
 def _validate_metrics(raw) -> None:
     quality_metrics = raw.get("quality_metrics") or []
     if not isinstance(quality_metrics, list) or not quality_metrics:
-        raise ValueError("There are no quality metrics defined. Please specify at least one quality metric.")
+        raise ValueError(
+            "There are no quality metrics defined. Please specify at least one quality metric."
+        )
     unsupported = [
-        m.get("name") for m in quality_metrics if m.get("name") not in SUPPORTED_QUALITY_METRICS
+        m.get("name")
+        for m in quality_metrics
+        if m.get("name") not in SUPPORTED_QUALITY_METRICS
     ]
     if unsupported:
         raise ValueError(
@@ -126,7 +134,8 @@ def _validate_performance_metrics(raw) -> None:
             f"Supported: {sorted(SUPPORTED_PERFORMANCE_METRICS)}"
         )
 
-def _validate_dataset_existence(corpus_path,path) -> Path:
+
+def _validate_dataset_existence(corpus_path, path) -> Path:
     corpus = Path(corpus_path)
     if not corpus.is_absolute():
         corpus = (path.parent / corpus).resolve()
@@ -134,6 +143,7 @@ def _validate_dataset_existence(corpus_path,path) -> Path:
         raise FileNotFoundError(f"Corpus not found: {corpus}")
 
     return corpus
+
 
 def _validate_dataset(raw) -> Path:
     dataset = raw.get("dataset") or {}
@@ -143,6 +153,7 @@ def _validate_dataset(raw) -> Path:
 
     return ds_path
 
+
 def _validate_json_file(corpus) -> bool:
     text = corpus.read_text(encoding="utf-8")
     try:
@@ -151,12 +162,12 @@ def _validate_json_file(corpus) -> bool:
         data = None
 
     if data is not None:
-        converted = _convert_and_validate_jsonl_structure(data,corpus)
+        converted = _convert_and_validate_jsonl_structure(data, corpus)
         if converted is not None:
             corpus = converted
 
 
-def _convert_and_validate_jsonl_structure(data,corpus) -> Path | None:
+def _convert_and_validate_jsonl_structure(data, corpus) -> Path | None:
     text = corpus.read_text(encoding="utf-8")
     if data is not None:
         if isinstance(data, list):
@@ -167,7 +178,8 @@ def _convert_and_validate_jsonl_structure(data,corpus) -> Path | None:
             return None
         raise ValueError(f"Corpus JSON is not an array: {corpus}")
     return None
-    
+
+
 def _validate_dataset_lines(corpus) -> None:
     text = corpus.read_text(encoding="utf-8")
     for i, line in enumerate(text.splitlines(), start=1):
@@ -176,7 +188,7 @@ def _validate_dataset_lines(corpus) -> None:
         try:
             json.loads(line)
         except json.JSONDecodeError:
-            raise ValueError(f"Invalid corpus at line {i} (not json neither jsonl):")    
+            raise ValueError(f"Invalid corpus at line {i} (not json neither jsonl):")
 
 
 def validate_yaml_file(yaml_path: str) -> None:
@@ -192,7 +204,7 @@ def validate_yaml_file(yaml_path: str) -> None:
 
     ds_path = _validate_dataset(raw)
 
-    corpus = _validate_dataset_existence(ds_path,path)
+    corpus = _validate_dataset_existence(ds_path, path)
 
     _validate_json_file(corpus)
 
