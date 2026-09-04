@@ -8,13 +8,6 @@ dataset:
   source_lang: "en"
   target_lang: "pt"
   format: "jsonl"  
-  max_length: 512
-  batch_size: 32
-  
-  fields:
-    en: "en"
-    pt: "pt"
-    id: "id"
 
 models:
   - id: "opus_mt-200M"

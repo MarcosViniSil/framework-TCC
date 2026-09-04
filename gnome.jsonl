@@ -1,3 +1,100 @@
 {"id": 1, "en": "Accerciser", "pt": "Accerciser"}
-
-
+{"id": 2, "en": "Give your application an accessibility workout", "pt": "Faça um exercício de acessibilidade em seu aplicativo"}
+{"id": 3, "en": "Accerciser Accessibility Explorer", "pt": "Explorador de Acessibilidade Accerciser"}
+{"id": 4, "en": "The default plugin layout for the bottom panel", "pt": "A disposição padrão de plug-ins para o painel de base"}
+{"id": 5, "en": "The default plugin layout for the top panel", "pt": "A disposição padrão de plug-ins para o painel do topo"}
+{"id": 6, "en": "A list of plugins that are disabled by default", "pt": "Uma lista de plug-ins que estão desabilitados por padrão"}
+{"id": 7, "en": "Highlight duration", "pt": "Duração do destaque"}
+{"id": 8, "en": "The duration of the highlight box when selecting accessible nodes", "pt": "A duração da caixa de destaque ao selecionar nós acessíveis"}
+{"id": 9, "en": "Highlight border color", "pt": "Cor da borda do destaque"}
+{"id": 10, "en": "The color and opacity of the highlight border.", "pt": "A cor e a opacidade da borda do destaque."}
+{"id": 11, "en": "Highlight fill color", "pt": "Cor do preenchimento do destaque"}
+{"id": 12, "en": "The color and opacity of the highlight fill.", "pt": "A cor e a opacidade do preenchimento do destaque."}
+{"id": 13, "en": "API Browser", "pt": "Navegador de APIs"}
+{"id": 14, "en": "Browse the various methods of the current accessible", "pt": "Navegar pelos vários métodos do objeto acessível atual"}
+{"id": 15, "en": "Hide private attributes", "pt": "Ocultar atributos privados"}
+{"id": 16, "en": "Method", "pt": "Método"}
+{"id": 17, "en": "Property", "pt": "Propriedade"}
+{"id": 18, "en": "Value", "pt": "Valor"}
+{"id": 19, "en": "IPython Console", "pt": "Console IPython"}
+{"id": 20, "en": "Interactive console for manipulating currently selected accessible", "pt": "Console interativo para manipular o objeto acessível atualmente selecionado"}
+{"id": 21, "en": "Event monitor", "pt": "Monitor de eventos"}
+{"id": 22, "en": "_Monitor Events", "pt": "_Monitorar eventos"}
+{"id": 23, "en": "C_lear Selection", "pt": "_Limpar seleção"}
+{"id": 24, "en": "Everything", "pt": "Tudo"}
+{"id": 25, "en": "Selected application", "pt": "Aplicativo selecionado"}
+{"id": 26, "en": "Selected accessible", "pt": "Objeto acessível selecionado"}
+{"id": 27, "en": "Source", "pt": "Fonte"}
+{"id": 28, "en": "Event Monitor", "pt": "Monitor de eventos"}
+{"id": 29, "en": "Shows events as they occur from selected types and sources", "pt": "Mostra os eventos ao ocorrerem a partir dos tipos e fontes selecionados"}
+{"id": 30, "en": "Highlight last event entry", "pt": "Destaca último registro de evento"}
+{"id": 31, "en": "Start/stop event recording", "pt": "Inicia/pára gravação do evento"}
+{"id": 32, "en": "Clear event log", "pt": "Limpa registro de eventos"}
+{"id": 33, "en": "Child count", "pt": "Número de filhos"}
+{"id": 34, "en": "(no description)", "pt": "(sem descrição)"}
+{"id": 35, "en": "Description", "pt": "Descrição"}
+{"id": 36, "en": "States", "pt": "Estados"}
+{"id": 37, "en": "Show", "pt": "Mostrar"}
+{"id": 38, "en": "Relations", "pt": "Relacionamentos"}
+{"id": 39, "en": "Attributes", "pt": "Atributos"}
+{"id": 40, "en": "_Accessible", "pt": "_Acessível"}
+{"id": 41, "en": "Perform action", "pt": "Executar ação"}
+{"id": 42, "en": "Acti_on", "pt": "Açã_o"}
+{"id": 43, "en": "ID", "pt": "ID"}
+{"id": 44, "en": "Toolkit", "pt": "Caixa de ferramentas"}
+{"id": 45, "en": "Version", "pt": "Versão"}
+{"id": 46, "en": "Ap_plication", "pt": "A_plicativo"}
+{"id": 47, "en": "Col_lection", "pt": "Co_leção"}
+{"id": 48, "en": "0, 0", "pt": "0, 0"}
+{"id": 49, "en": "Relative position", "pt": "Posição relativa"}
+{"id": 50, "en": "Size", "pt": "Tamanho"}
+{"id": 51, "en": "WIDGET", "pt": "WIDGET"}
+{"id": 52, "en": "Layer", "pt": "Camada"}
+{"id": 53, "en": "MDI-Z-order", "pt": "MDI-Z-order"}
+{"id": 54, "en": "Alpha", "pt": "Alfa"}
+{"id": 55, "en": "Absolute position", "pt": "Posição absoluta"}
+{"id": 56, "en": "Co_mponent", "pt": "Co_mponente"}
+{"id": 57, "en": "Des_ktop", "pt": "Área de _trabalho"}
+{"id": 58, "en": "Locale:", "pt": "Localidade:"}
+{"id": 59, "en": "_Document", "pt": "_Documento"}
+{"id": 60, "en": "Hyperlink", "pt": "Hiperlink"}
+{"id": 61, "en": "H_ypertext", "pt": "H_ipertexto"}
+{"id": 62, "en": "Position", "pt": "Posição"}
+{"id": 63, "en": "Description", "pt": "Descrição"}
+{"id": 64, "en": "Locale", "pt": "Localidade"}
+{"id": 65, "en": "_Image", "pt": "_Imagem"}
+{"id": 66, "en": "Lo_gin Helper", "pt": "Assistente de início de sessão"}
+{"id": 67, "en": "Select All", "pt": "Selecionar todos"}
+{"id": 68, "en": "_Selection", "pt": "_Seleção"}
+{"id": 69, "en": "St_reamable Content", "pt": "Conteúdo em flu_xo"}
+{"id": 70, "en": "Caption:", "pt": "Legenda:"}
+{"id": 71, "en": "Summary:", "pt": "Sumário:"}
+{"id": 72, "en": "Selected columns", "pt": "Colunas selecionadas"}
+{"id": 73, "en": "Selected rows", "pt": "Linhas selecionadas"}
+{"id": 74, "en": "Columns", "pt": "Colunas"}
+{"id": 75, "en": "Rows", "pt": "Linhas"}
+{"id": 76, "en": "Table Information", "pt": "Informação da tabela"}
+{"id": 77, "en": "name (x,y)", "pt": "nome (x,y)"}
+{"id": 78, "en": "Header:", "pt": "Cabeçalho:"}
+{"id": 79, "en": "Extents:", "pt": "Estende-se:"}
+{"id": 80, "en": "Row", "pt": "Linha"}
+{"id": 81, "en": "Column", "pt": "Coluna"}
+{"id": 82, "en": "Selected Cell", "pt": "Célula selecionada"}
+{"id": 83, "en": "_Table", "pt": "_Tabela"}
+{"id": 84, "en": "Text", "pt": "Texto"}
+{"id": 85, "en": "Offset", "pt": "Deslocamento"}
+{"id": 86, "en": "Include defaults", "pt": "Incluir padrões"}
+{"id": 87, "en": "Start: 0", "pt": "Início: 0"}
+{"id": 88, "en": "End: 0", "pt": "Fim: 0"}
+{"id": 89, "en": "Te_xt", "pt": "Te_xto"}
+{"id": 90, "en": "Current value", "pt": "Valor atual"}
+{"id": 91, "en": "Minimum increment", "pt": "Incremento mínimo"}
+{"id": 92, "en": "Maximum value", "pt": "Valor máximo"}
+{"id": 93, "en": "Minimum value", "pt": "Valor mínimo"}
+{"id": 94, "en": "Val_ue", "pt": "Val_or"}
+{"id": 95, "en": "unknown", "pt": "desconhecido"}
+{"id": 96, "en": "Interface Viewer", "pt": "Visão de interface"}
+{"id": 97, "en": "Allows viewing of various interface properties", "pt": "Permite visualizar uma variedade de propriedades de interface"}
+{"id": 98, "en": "(not implemented)", "pt": "(não implementado)"}
+{"id": 99, "en": "Name", "pt": "Nome"}
+{"id": 100, "en": "URI", "pt": "URI"}

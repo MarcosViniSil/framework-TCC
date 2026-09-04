@@ -4,7 +4,7 @@ from datetime import datetime
 
 @dataclass
 class CSVModel:
-    id: int
+    sample_id: int
     timestamp: datetime
     source_lang: str
     target_lang: str
@@ -25,10 +25,10 @@ class CSVModel:
     cpu_min_usage: float
 
     # Memory
-    memory_additional: float
-    memory_initial: float
-    memory_final: float
-    memory_peak: float
+    additional_memory: float
+    initial_memory: float
+    final_memory: float
+    peak_memory: float
 
     # Inference
     inference_time: float

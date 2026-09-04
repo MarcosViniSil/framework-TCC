@@ -17,6 +17,17 @@ def _get_project_root():
     project_root = current_file.parent.parent.parent
     return project_root
 
+def _get_source_language(yaml_path) -> str:
+    with open(yaml_path, "r", encoding="utf-8") as file:
+        data = yaml.safe_load(file)
+
+        return data["dataset"]["source_lang"]
+
+def _get_target_language(yaml_path) -> str:
+    with open(yaml_path, "r", encoding="utf-8") as file:
+        data = yaml.safe_load(file)
+
+        return data["dataset"]["target_lang"]
 
 def _get_corpus_path(yaml_path) -> str:
     with open(yaml_path, "r", encoding="utf-8") as file:
@@ -30,13 +41,16 @@ def convert_corpus_to_dict(yaml_path) -> DataSet:
     project_root = _get_project_root()
     absolute_path = project_root / corpus_path.lstrip(". /")
 
+    source_lang = _get_source_language(yaml_path)
+    target_lang = _get_target_language(yaml_path)
+
     with open(absolute_path, "r", encoding="utf-8") as json_data:
         try:
             if corpus_path.endswith(".json"):
                 corpus = json.load(json_data)
             else:
                 corpus = [json.loads(line) for line in json_data if line.strip()]
-            return DataSet(corpus if corpus else [{}])
+            return DataSet(corpus if corpus else [{}], source_langue=source_lang, target_language=target_lang)
 
         except Exception as e:
             logger.warning(
