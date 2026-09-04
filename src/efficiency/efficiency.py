@@ -112,15 +112,45 @@ class Efficiency:
 
         self.end_inference = time.perf_counter()
 
+    def format_time(self,ms:float) -> str:
+        seconds = ms / 1000
+
+        if seconds < 60:
+            return f"{seconds:.2f} sec"
+
+        minutes = seconds / 60
+
+        if minutes < 60:
+            return f"{minutes:.2f} min"
+
+        hours = minutes / 60
+
+        if hours < 24:
+            return f"{hours:.2f} h"
+
+        days = hours / 24
+        return f"{days:.2f} days"
+
+    def format_memory(self,mb:float) -> str:
+        value = mb
+        units = ["MB", "GB", "TB", "PB"]
+
+        for unit in units:
+            if value < 1024:
+                return f"{value:.2f} {unit}"
+            value /= 1024
+
+        return f"{value:.2f} EB"
+
     def _memory_statistics(self) -> MemoryEfficiency:
 
-        additional_memory = self.mem_peak - self.mem_before
+        additional_memory = self.format_memory(self.mem_peak - self.mem_before)
 
-        initial_memory = round(self.mem_before, 2)
+        initial_memory = self.format_memory(round(self.mem_before, 2))
 
-        final_memory = round(self.mem_after, 2)
+        final_memory = self.format_memory(round(self.mem_after, 2))
 
-        memory_peak = round(self.mem_peak, 2)
+        memory_peak = self.format_memory(round(self.mem_peak, 2))
 
         return MemoryEfficiency(
             additional_memory=additional_memory,
@@ -133,22 +163,20 @@ class Efficiency:
 
         elapsed = (self.end_inference - self.start_inference) * 1000
 
-        return Inference(inferenceTime=round(elapsed, 2))
+        return Inference(inferenceTime=self.format_time(elapsed))
 
     def _cpu_statistics(self) -> CpuEfficiency:
 
         if not self.samples:
             return CpuEfficiency(samples=0, average_usage=0, max_usage=0, min_usage=0)
 
-        average_usage = round(sum(self.samples) / len(self.samples), 2)
+        average_usage = f"{round(sum(self.samples) / len(self.samples), 2)} %"
 
         sample_number = len(self.samples)
 
-        max_usage = round(max(self.samples), 2)
+        max_usage = f"{round(max(self.samples), 2)} %"
 
-        min_usage = round(min(self.samples), 2)
-
-        max_usage = round(max(self.samples), 2)
+        min_usage = f"{round(min(self.samples), 2)} %"
 
         return CpuEfficiency(
             average_usage=average_usage,

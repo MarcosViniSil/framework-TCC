@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class CpuEfficiency:
-    average_usage: float
+    average_usage: str
     samples: int
-    max_usage: float
-    min_usage: float
+    max_usage: str
+    min_usage: str

@@ -26,7 +26,9 @@ class Metrics:
             [reference_tokens], generated_tokens, smoothing_function=smooth
         )
 
-        return MetricResult(metric_name="BLEU", value=float(bleu_value), metadata=None)
+        value = round(float(bleu_value), 3)
+
+        return MetricResult(metric_name="BLEU", value=value, metadata=None)
 
     def BERTscore(self, reference: str, generated_by_model: str) -> MetricResult:
         if not reference or not generated_by_model:
@@ -39,8 +41,10 @@ class Metrics:
             [generated_by_model], [reference], lang="pt", verbose=True
         )
 
+        bertscore_value = round(float(f1.mean()),3)
+
         return MetricResult(
-            metric_name="BERTscore", value=float(f1.mean()), metadata=None
+            metric_name="BERTscore", value=bertscore_value, metadata=None
         )
 
     def chrf(self, reference: str, generated_by_model: str) -> MetricResult:
@@ -52,4 +56,6 @@ class Metrics:
 
         chrf = sacrebleu.sentence_chrf(generated_by_model, [reference])
 
-        return MetricResult(metric_name="chrf", value=float(chrf.score), metadata=None)
+        chrf_value = round(float(chrf.score),2)
+
+        return MetricResult(metric_name="chrf", value=chrf_value, metadata=None)

@@ -39,7 +39,6 @@ class ModelManager:
     ) -> TranslationResult:
 
         model = self._get_model(model_id)
-        print("model ", model)
         return model.translate(text, source_lang, target_lang)
 
     def translate_batch(

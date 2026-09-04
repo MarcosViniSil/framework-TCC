@@ -10,7 +10,7 @@ from metrics.metrics import Metrics
 from models.modelManager import ModelManager
 from datetime import datetime
 
-from pipeline.generate_csv import generate_csv
+from pipeline.generate_report import generate_excel
 
 YAML_PATH = "../model.yaml"
 
@@ -126,6 +126,6 @@ def run():
             data_to_csv.append(csvModel)
 
     if header is not None:
-        generate_csv(header, data_to_csv)
+        generate_excel(header, data_to_csv)
     else:
         raise ValueError("it was not possible to generate csv. Reason: header is None")
