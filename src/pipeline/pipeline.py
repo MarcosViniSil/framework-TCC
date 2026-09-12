@@ -10,6 +10,8 @@ from metrics.metrics import Metrics
 from models.modelManager import ModelManager
 from datetime import datetime
 
+from tqdm import tqdm
+
 from pipeline.cache import append_to_cache, get_value_cached, key_exists_on_cache
 from pipeline.generate_report import generate_excel
 
@@ -92,49 +94,57 @@ def run():
     data_to_csv = []
     header = None
 
-    for i, corpus in enumerate(dataset.corpus):
-        for j, model_id in enumerate(models_id):
+    total_translations = len(dataset.corpus) * len(models_id)
 
-            if i == j == 0:
-                header = define_header()
+    with tqdm(total=total_translations, desc="Translating", unit="translation") as progress:
+        for i, corpus in enumerate(dataset.corpus):
+            for j, model_id in enumerate(models_id):
 
-            key = (corpus['id'], model_id)
+                progress.set_postfix(model=model_id, sample=corpus['id'])
 
-            if key_exists_on_cache(key):
-                data_to_csv.append(get_value_cached(key))
-                continue
+                if i == j == 0:
+                    header = define_header()
 
-            efficiency.start_collection()
+                key = (corpus['id'], model_id)
 
-            translation: TranslationResult = modelManager.translate(
-                corpus[dataset.source_langue], model_id
-            )
+                if key_exists_on_cache(key):
+                    data_to_csv.append(get_value_cached(key))
+                    progress.update(1)
+                    continue
 
-            bleu_metric: MetricResult = metrics.bleu(
-                corpus[dataset.target_language], translation.target_text
-            )
-            bertScore: MetricResult = metrics.BERTscore(
-                corpus[dataset.target_language], translation.target_text
-            )
-            chrf_metric: MetricResult = metrics.chrf(
-                corpus[dataset.target_language], translation.target_text
-            )
+                efficiency.start_collection()
 
-            efficiency.stop_collection()
-            efficiency_metrics: EfficiencyModel = efficiency.collect_metrics()
+                translation: TranslationResult = modelManager.translate(
+                    corpus[dataset.source_langue], model_id
+                )
 
-            efficiency.clear()
+                bleu_metric: MetricResult = metrics.bleu(
+                    corpus[dataset.target_language], translation.target_text
+                )
+                bertScore: MetricResult = metrics.BERTscore(
+                    corpus[dataset.target_language], translation.target_text
+                )
+                chrf_metric: MetricResult = metrics.chrf(
+                    corpus[dataset.target_language], translation.target_text
+                )
 
-            csvModel = createCSV_model(
-                data=corpus,
-                metrics=[bleu_metric, bertScore, chrf_metric],
-                translation=translation,
-                efficiency_metrics=efficiency_metrics,
-                model_name=model_id,
-            )
+                efficiency.stop_collection()
+                efficiency_metrics: EfficiencyModel = efficiency.collect_metrics()
 
-            data_to_csv.append(csvModel)
-            append_to_cache(key,csvModel)
+                efficiency.clear()
+
+                csvModel = createCSV_model(
+                    data=corpus,
+                    metrics=[bleu_metric, bertScore, chrf_metric],
+                    translation=translation,
+                    efficiency_metrics=efficiency_metrics,
+                    model_name=model_id,
+                )
+
+                data_to_csv.append(csvModel)
+                append_to_cache(key,csvModel)
+
+                progress.update(1)
 
     if header is not None:
         generate_excel(header, data_to_csv)
