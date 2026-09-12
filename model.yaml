@@ -4,7 +4,7 @@ experiment:
   output_dir: "./results"
 
 dataset:
-  path: "./gnome.jsonl"
+  path: "./test.jsonl"
   source_lang: "en"
   target_lang: "pt"
   format: "jsonl"  
