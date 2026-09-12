@@ -38,7 +38,7 @@ class Metrics:
             )
 
         precision, recall, f1 = score(
-            [generated_by_model], [reference], lang="pt", verbose=True
+            [generated_by_model], [reference], lang="pt", verbose=False
         )
 
         bertscore_value = round(float(f1.mean()),3)
