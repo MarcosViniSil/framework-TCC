@@ -375,6 +375,11 @@
     errors: 0,
   };
 
+  const modelsState = {
+    modelId:"",
+    completed:0
+  }
+
   let globalState = {}
 
   /* ---------------- Helpers ---------------- */
@@ -430,21 +435,21 @@
     return el;
   }
 
-  function getModel(modelId) {
+function getModel(modelId) {
     if (!state.models.has(modelId)) {
-      const el = createCard(modelId);
-      if (els.emptyState && els.emptyState.parentNode) els.emptyState.remove();
-      els.models.appendChild(el);
-      state.models.set(modelId, {
-        id: modelId,
-        completed: 0,
-        total: 0,
-        sample: "—",
-        el,
-      });
+        const el = createCard(modelId);
+        if (els.emptyState && els.emptyState.parentNode) els.emptyState.remove();
+        els.models.appendChild(el);
+        state.models.set(modelId, {
+            modelId: modelId,
+            completed: 0,
+            total: 0,
+            sample: "-",
+            el: el               
+        });
     }
     return state.models.get(modelId);
-  }
+}
 
   function renderModel(m, total) {
     const pct = m.total > 0 ? Math.min(100, (m.completed / (total / 3)) * 100) : 0;
@@ -527,18 +532,32 @@
   }
 
   /* ---------------- Handlers de mensagem ---------------- */
-  function handleProgress(data) {
-    const modelId = data.model != null ? String(data.model) : "modelo-desconhecido";
-    const m = getModel(modelId);
+function handleProgress(data) {
+    if (!data || typeof data !== "object") return;
 
+    const modelsCount = (data.models_count && typeof data.models_count === "object")
+        ? data.models_count
+        : {};
 
-    if (typeof data.completed === "number") m.completed += 1;
-    if (typeof data.total === "number") m.total = data.total;
-    if (data.sample != null) m.sample = String(data.sample);
+    const totalGlobal     = Number(data.total) || 0;
+    const completedGlobal = Number(data.completed) || 0;
+    const numModels       = Object.keys(modelsCount).length || 1;
 
-    renderModel(m,data.total);
-    renderOverall(data.completed, data.total);
-  }
+    // Quanto cada modelo deve produzir no total
+    // (ex.: total=6, 3 modelos → 2 por modelo)
+    const perModelTotal = numModels > 0 ? totalGlobal / numModels : 0;
+
+    // Atualiza/cria cartão para TODOS os modelos reportados
+    for (const [modelId, count] of Object.entries(modelsCount)) {
+        const m = getModel(modelId);
+        m.completed = Number(count) || 0;
+        m.total     = totalGlobal;
+        if (data.sample != null) m.sample = String(data.sample);
+        renderModel(m,totalGlobal);
+    }
+
+    renderOverall(completedGlobal, totalGlobal);
+}
 
   function handleError(data) {
     const msg = data.message != null ? String(data.message) : "Erro desconhecido";

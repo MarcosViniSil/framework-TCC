@@ -3,7 +3,7 @@ from common.yaml_scrapping import YamlService
 
 class Models:
     @staticmethod
-    def get_models_ids() -> list[dict]:
+    def get_models_ids() -> list[str]:
         data = YamlService.getYamlData()
         models_list = data["models"]
         return list(map(lambda x: x["name"], models_list))

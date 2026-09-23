@@ -97,6 +97,12 @@ async def run():
     header = None
 
     total_translations = len(dataset.corpus) * len(models_id)
+
+    count_translation_model = {}
+
+    for model_id in models_id:
+        count_translation_model[model_id] = 0
+
     completed = 0
     with tqdm(total=total_translations, desc="Translating", unit="translation") as progress:
         for i, corpus in enumerate(dataset.corpus):
@@ -115,13 +121,15 @@ async def run():
                         progress.update(1)
 
                         completed += 1
+                        count_translation_model[model_id] += 1
 
                         await send_message({
                             "type": "progress",
-                            "sample": corpus["id"],
+                            "sample": corpus["en"],
                             "model": model_id,
                             "completed": completed,
-                            "total": total_translations
+                            "total": total_translations,
+                            "models_count": count_translation_model
                         })
 
 
@@ -162,14 +170,17 @@ async def run():
 
                     progress.update(1)
 
+                    count_translation_model[model_id] += 1
                     completed += 1
 
                     await send_message({
                         "type": "progress",
-                        "sample": corpus["id"],
+                        "sample": corpus["en"],
                         "model": model_id,
                         "completed": completed,
-                        "total": total_translations
+                        "total": total_translations,
+                        "models_count": count_translation_model
+                        
                     })
                 except Exception as e:
                     await send_message({
