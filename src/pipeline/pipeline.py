@@ -14,6 +14,7 @@ from tqdm import tqdm
 
 from pipeline.cache import append_to_cache, get_value_cached, key_exists_on_cache
 from pipeline.generate_report import generate_excel
+from ws.jobs import send_message
 
 YAML_PATH = "../model.yaml"
 
@@ -82,7 +83,8 @@ def createCSV_model(
     return CSVModel(**row)
 
 
-def run():
+async def run():
+    print("comecou")
     efficiency = Efficiency()
     metrics = Metrics()
 
@@ -95,58 +97,95 @@ def run():
     header = None
 
     total_translations = len(dataset.corpus) * len(models_id)
-
+    completed = 0
     with tqdm(total=total_translations, desc="Translating", unit="translation") as progress:
         for i, corpus in enumerate(dataset.corpus):
             for j, model_id in enumerate(models_id):
+                try:
+                    progress.set_postfix(model=model_id, sample=corpus['id'])
 
-                progress.set_postfix(model=model_id, sample=corpus['id'])
 
-                if i == j == 0:
-                    header = define_header()
+                    if i == j == 0:
+                        header = define_header()
 
-                key = (corpus['id'], model_id)
+                    key = (corpus['id'], model_id)
 
-                if key_exists_on_cache(key):
-                    data_to_csv.append(get_value_cached(key))
+                    if key_exists_on_cache(key):
+                        data_to_csv.append(get_value_cached(key))
+                        progress.update(1)
+
+                        completed += 1
+
+                        await send_message({
+                            "type": "progress",
+                            "sample": corpus["id"],
+                            "model": model_id,
+                            "completed": completed,
+                            "total": total_translations
+                        })
+
+
+                        continue
+
+
+                    efficiency.start_collection()
+
+                    translation: TranslationResult = modelManager.translate(
+                        corpus[dataset.source_langue], model_id
+                    )
+
+                    bleu_metric: MetricResult = metrics.bleu(
+                        corpus[dataset.target_language], translation.target_text
+                    )
+                    bertScore: MetricResult = metrics.BERTscore(
+                        corpus[dataset.target_language], translation.target_text
+                    )
+                    chrf_metric: MetricResult = metrics.chrf(
+                        corpus[dataset.target_language], translation.target_text
+                    )
+
+                    efficiency.stop_collection()
+                    efficiency_metrics: EfficiencyModel = efficiency.collect_metrics()
+
+                    efficiency.clear()
+
+                    csvModel = createCSV_model(
+                        data=corpus,
+                        metrics=[bleu_metric, bertScore, chrf_metric],
+                        translation=translation,
+                        efficiency_metrics=efficiency_metrics,
+                        model_name=model_id,
+                    )
+
+                    data_to_csv.append(csvModel)
+                    append_to_cache(key,csvModel)
+
                     progress.update(1)
-                    continue
 
-                efficiency.start_collection()
+                    completed += 1
 
-                translation: TranslationResult = modelManager.translate(
-                    corpus[dataset.source_langue], model_id
-                )
-
-                bleu_metric: MetricResult = metrics.bleu(
-                    corpus[dataset.target_language], translation.target_text
-                )
-                bertScore: MetricResult = metrics.BERTscore(
-                    corpus[dataset.target_language], translation.target_text
-                )
-                chrf_metric: MetricResult = metrics.chrf(
-                    corpus[dataset.target_language], translation.target_text
-                )
-
-                efficiency.stop_collection()
-                efficiency_metrics: EfficiencyModel = efficiency.collect_metrics()
-
-                efficiency.clear()
-
-                csvModel = createCSV_model(
-                    data=corpus,
-                    metrics=[bleu_metric, bertScore, chrf_metric],
-                    translation=translation,
-                    efficiency_metrics=efficiency_metrics,
-                    model_name=model_id,
-                )
-
-                data_to_csv.append(csvModel)
-                append_to_cache(key,csvModel)
-
-                progress.update(1)
+                    await send_message({
+                        "type": "progress",
+                        "sample": corpus["id"],
+                        "model": model_id,
+                        "completed": completed,
+                        "total": total_translations
+                    })
+                except Exception as e:
+                    await send_message({
+                        "type": "error",
+                        "message": str(e),
+                        "timestamp": str(datetime.now())
+                    })
+                    return
+                
 
     if header is not None:
         generate_excel(header, data_to_csv)
     else:
         raise ValueError("it was not possible to generate csv. Reason: header is None")
+
+if __name__ == "__main__":
+    import asyncio
+
+    asyncio.run(run())
